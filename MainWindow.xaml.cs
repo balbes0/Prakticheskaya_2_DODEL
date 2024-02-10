@@ -43,8 +43,6 @@ namespace Prakticheskaya_2
             ListBox.ItemsSource = filteredNotebooks.Select(item => $"#{item.ID}: {item.NameOfNotebook}");
         }
 
-        //ListBox.ItemsSource = NotebookList.Select(item => item.NameOfNotebook);
-
         public void DeserializeJsonFile()
         {
             if (File.ReadAllText("C:\\Users\\erton\\Desktop\\Notebooks.json") != "")
@@ -67,56 +65,94 @@ namespace Prakticheskaya_2
             TextBoxName.Text = "";
             TextBoxDescription.Text = "";
         }
-        public int SearchID(string NotebookStr) //fix
+        private void DeleteNotebook_Click(object sender, RoutedEventArgs e)
         {
-            string selectedIDStr = NotebookStr;
-            int index = selectedIDStr.IndexOf("#");
-            char nextChar = selectedIDStr[index + 1];
-            int selectedID = int.Parse(nextChar.ToString());
-            return selectedID;
-        }
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) //fix
-        {
-            string NotebookStr = ListBox.SelectedItem.ToString();
-            int selectedID = SearchID(NotebookStr);
-            TextBoxName.Text = NotebookList[selectedID].NameOfNotebook;
-            TextBoxDescription.Text = NotebookList[selectedID].DescriptionOfNotebook;
-        }
-
-        private void DeleteNotebook_Click(object sender, RoutedEventArgs e) //fix
-        {
-            if (ListBox.SelectedIndex != -1 && ListBox.SelectedIndex < NotebookList.Count)
+            if (ListBox.SelectedItem != null)
             {
-                var selectedNotebook = NotebookList[ListBox.SelectedIndex];
-                NotebookList.RemoveAt(ListBox.SelectedIndex);
-                SerializeJsonFile();
-                MessageBox.Show("Заметка удалена");
-                ShowItemsInListBox();
-                TextBoxName.Text = "";
-                TextBoxDescription.Text = "";
+                string selectedItem = ListBox.SelectedItem.ToString();
+                int idStartIndex = selectedItem.IndexOf("#") + 1;
+                int idEndIndex = selectedItem.IndexOf(":");
+                string idString = selectedItem.Substring(idStartIndex, idEndIndex - idStartIndex).Trim();
+                int id = int.Parse(idString);
+
+                Notebook notebookToRemove = NotebookList.FirstOrDefault(notebook => notebook.ID == id);
+                if (notebookToRemove != null)
+                {
+                    NotebookList.Remove(notebookToRemove);
+                    int index = id - 1;
+                    foreach (var notebook in NotebookList.GetRange(index, NotebookList.Count - index))
+                    {
+                        notebook.ID -= 1;
+                    }
+
+                    SerializeJsonFile();
+                    MessageBox.Show("Заметка удалена");
+                    ShowItemsInListBox();
+                    TextBoxName.Text = "";
+                    TextBoxDescription.Text = "";
+                }
             }
         }
-
-        private void SaveNotebook_Click(object sender, RoutedEventArgs e) //fix
+        private void SaveNotebook_Click(object sender, RoutedEventArgs e)
         {
-            if (ListBox.SelectedIndex != -1 && ListBox.SelectedIndex < NotebookList.Count)
+            if (ListBox.SelectedItem != null)
             {
-                var selectedNotebook = NotebookList[ListBox.SelectedIndex];
-                selectedNotebook.NameOfNotebook = TextBoxName.Text;
-                selectedNotebook.DescriptionOfNotebook = TextBoxDescription.Text;
-                selectedNotebook.DateOfCreation = DateChoice.Text;
-                SerializeJsonFile();
-                MessageBox.Show("Заметка сохранена");
-                ShowItemsInListBox();
-                TextBoxName.Text = "";
-                TextBoxDescription.Text = "";
+                string selectedItem = ListBox.SelectedItem.ToString();
+                int idStartIndex = selectedItem.IndexOf("#") + 1;
+                int idEndIndex = selectedItem.IndexOf(":");
+                string idString = selectedItem.Substring(idStartIndex, idEndIndex - idStartIndex).Trim();
+                int id = int.Parse(idString);
+
+                Notebook notebookToSave = NotebookList.FirstOrDefault(notebook => notebook.ID == id);
+                if (notebookToSave != null)
+                {
+                    notebookToSave.NameOfNotebook = TextBoxName.Text;
+                    notebookToSave.DescriptionOfNotebook = TextBoxDescription.Text;
+                    SerializeJsonFile(); // Сохраняем изменения в файл JSON
+                    MessageBox.Show("Заметка сохранена");
+                    ShowItemsInListBox();
+                }
             }
         }
-
         private void DateChoice_SelectedDateChanged(object sender, SelectionChangedEventArgs e) //zbs
         {
             ShowItemsInListBox();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListBox.SelectedItem != null)
+            {
+                string selectedItem = ListBox.SelectedItem.ToString();
+                int idStartIndex = selectedItem.IndexOf("#") + 1;
+                int idEndIndex = selectedItem.IndexOf(":");
+                string idString = selectedItem.Substring(idStartIndex, idEndIndex - idStartIndex).Trim();
+                int id = int.Parse(idString);
+
+                Notebook selectedNotebook = NotebookList.FirstOrDefault(notebook => notebook.ID == id);
+                if (selectedNotebook != null)
+                {
+                    TextBoxName.Text = selectedNotebook.NameOfNotebook;
+                    TextBoxDescription.Text = selectedNotebook.DescriptionOfNotebook;
+                }
+            }
+        }
+        public void ShowAllNotebooks()
+        {
+            ListBox.ItemsSource = NotebookList.Select(item => $"#{item.ID}: Название заметки: {item.NameOfNotebook} | Дата создания: {item.DateOfCreation}");
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckBox.IsChecked == true)
+            {
+                DeserializeJsonFile();
+                ShowAllNotebooks();
+            }
+            else
+            {
+                ShowItemsInListBox();
+            }
         }
     }
 }
