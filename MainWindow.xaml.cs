@@ -45,7 +45,7 @@ namespace Prakticheskaya_2
 
         public void DeserializeJsonFile()
         {
-            if (File.ReadAllText("C:\\Users\\erton\\Desktop\\Notebooks.json") != "")
+            if (File.ReadAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((") != "")
             {
                 NotebookList = JSONchik.JsonDeserialize<List<Notebook>>();
             }
