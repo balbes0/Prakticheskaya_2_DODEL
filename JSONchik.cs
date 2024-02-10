@@ -13,11 +13,11 @@ namespace Prakticheskaya_2
         public static void JsonSerialize<T>(T notebook)
         {
             string json = JsonConvert.SerializeObject(notebook);
-            File.WriteAllText("C:\\Users\\erton\\Desktop\\Notebooks.json", json);
+            File.WriteAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((", json);
         }
         public static T JsonDeserialize<T>()
         {
-            string json = File.ReadAllText("C:\\Users\\erton\\Desktop\\Notebooks.json");
+            string json = File.ReadAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((");
             T notebookdeser = JsonConvert.DeserializeObject<T>(json);
             return notebookdeser;
         }
