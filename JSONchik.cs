@@ -12,12 +12,14 @@ namespace Prakticheskaya_2
     {
         public static void JsonSerialize<T>(T notebook)
         {
+            string PathToDesktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Notebooks.json";
             string json = JsonConvert.SerializeObject(notebook);
-            File.WriteAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((", json);
+            File.WriteAllText(PathToDesktop, json);
         }
         public static T JsonDeserialize<T>()
         {
-            string json = File.ReadAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((");
+            string PathToDesktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Notebooks.json";
+            string json = File.ReadAllText(PathToDesktop);
             T notebookdeser = JsonConvert.DeserializeObject<T>(json);
             return notebookdeser;
         }

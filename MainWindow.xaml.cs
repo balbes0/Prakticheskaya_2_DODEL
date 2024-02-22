@@ -45,9 +45,18 @@ namespace Prakticheskaya_2
 
         public void DeserializeJsonFile()
         {
-            if (File.ReadAllText("СЮДА САМИ ВСТАВЬТЕ ПУТЬ ИБО МНЕ ЛЕНЬ ДЕЛАТЬ ПРОВЕРКИ()())()((") != "")
+            string PathToDesktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)+"\\Notebooks.json";
+            if (File.Exists(PathToDesktop))
             {
-                NotebookList = JSONchik.JsonDeserialize<List<Notebook>>();
+                if (File.ReadAllText(PathToDesktop) != "")
+                {
+                    NotebookList = JSONchik.JsonDeserialize<List<Notebook>>();
+                }
+            }
+            else
+            {
+                File.Create(PathToDesktop);
+                MessageBox.Show("Был создал json файл для работы программы, зайдите еще раз");
             }
         }
 
